@@ -58,6 +58,16 @@ app.post('/api/persons', (req, res) => {
     })
   }
 
+  const personExists = persons.find(
+    p => p.name.toLowerCase() === body.name.toLowerCase()
+  )
+
+  if (personExists) {
+    return res.status(400).json({
+      error: 'name must be unique',
+    })
+  }
+
   const person = {
     name: body.name,
     number: body.number,
