@@ -1,4 +1,5 @@
 const express = require('express')
+
 const app = express()
 
 let persons = [
@@ -24,6 +25,8 @@ let persons = [
   },
 ]
 
+app.use(express.json())
+
 app.get('/info', (req, res) => {
   res.send(
     `<p>Phonebook has info for ${persons.length
@@ -44,6 +47,25 @@ app.get('/api/persons/:id', (req, res) => {
   } else {
     res.status(404).end()
   }
+})
+
+app.post('/api/persons', (req, res) => {
+  const body = req.body
+
+  if (!(body.name && body.number)) {
+    res.status(400).json({
+      error: 'missing name and/or number',
+    })
+  }
+
+  const person = {
+    name: body.name,
+    number: body.number,
+    id: Number(Math.random() * 99999999),
+  }
+
+  persons = persons.concat(person)
+  res.json(person)
 })
 
 app.delete('/api/persons/:id', (req, res) => {
