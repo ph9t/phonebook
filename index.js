@@ -33,6 +33,10 @@ let persons = [
 
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ message: 'unknown endpoint' })
+}
+
 const errorMiddleware = (err, req, res, next) => {
   console.error(err.message)
 
@@ -133,6 +137,7 @@ app.delete('/api/persons/:id', (req, res) => {
     .catch(error => next(error))
 })
 
+app.use(unknownEndpoint)
 app.use(errorMiddleware)
 
 const PORT = 3001
