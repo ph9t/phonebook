@@ -34,7 +34,7 @@ let persons = [
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 
 const unknownEndpoint = (req, res) => {
-  res.status(404).send({ message: 'unknown endpoint' })
+  res.status(404).send({ error: 'unknown endpoint' })
 }
 
 const errorMiddleware = (err, req, res, next) => {
