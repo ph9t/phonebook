@@ -40,7 +40,7 @@ const unknownEndpoint = (req, res) => {
 const errorMiddleware = (err, req, res, next) => {
   console.error(err.message)
 
-  if (error.name === 'CastError') {
+  if (err.name === 'CastError') {
     return res.status(400).json({ message: 'malformatted id' })
   }
 
