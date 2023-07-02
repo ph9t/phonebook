@@ -33,6 +33,16 @@ let persons = [
 
 morgan.token('body', (req, res) => JSON.stringify(req.body))
 
+const errorMiddleware = (err, req, res, next) => {
+  console.error(err.message)
+
+  if (error.name === 'CastError') {
+    return res.status(400).json({ message: 'malformatted id' })
+  }
+
+  next(err)
+}
+
 app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
@@ -66,9 +76,11 @@ app.get('/api/persons', (req, res) => {
 })
 
 app.get('/api/persons/:id', (req, res) => {
-  Person.findById(req.params.id).then(person => {
-    res.json(person)
-  })
+  Person.findById(req.params.id)
+    .then(person => {
+      res.json(person)
+    })
+    .catch(error => next(error))
 })
 
 app.post('/api/persons', (req, res) => {
@@ -107,7 +119,10 @@ app.delete('/api/persons/:id', (req, res) => {
     .then(result => {
       res.status(204).end()
     })
+    .catch(error => next(error))
 })
+
+app.use(errorMiddleware)
 
 const PORT = 3001
 app.listen(PORT, () => {
